@@ -1,0 +1,181 @@
+{
+  "name": "mdn-search-zh",
+  "displayName": "MDN Search 中文",
+  "description": "在 VS Code 中快速搜索 CSS、JavaScript、Web API、HTML 等 MDN 文档。",
+  "version": "0.3.0",
+  "publisher": "local-dev",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "MDN",
+    "CSS",
+    "JavaScript",
+    "Web API",
+    "HTML",
+    "Chinese",
+    "hover",
+    "documentation"
+  ],
+  "activationEvents": [
+    "onLanguage:css",
+    "onLanguage:scss",
+    "onLanguage:less",
+    "onLanguage:postcss",
+    "onLanguage:html",
+    "onLanguage:vue",
+    "onLanguage:svelte"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "mdnSearch.searchSelectedProperty",
+        "title": "搜索选中内容",
+        "category": "MDN Search"
+      },
+      {
+        "command": "mdnSearch.focusSearch",
+        "title": "聚焦 MDN 搜索",
+        "category": "MDN Search"
+      },
+      {
+        "command": "mdnSearch.refresh",
+        "title": "刷新 MDN 结果",
+        "category": "MDN Search",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "mdnSearch.clearHistory",
+        "title": "清除查询记录",
+        "category": "MDN Search",
+        "icon": "$(clear-all)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "mdnSearch.searchSelectedProperty",
+        "key": "ctrl+shift+f1",
+        "mac": "cmd+shift+f1",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "mdnSearch.searchSelectedProperty",
+          "when": "editorTextFocus",
+          "group": "navigation@50"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "mdnSearch.refresh",
+          "when": "view == mdnSearch.view",
+          "group": "navigation@1"
+        },
+        {
+          "command": "mdnSearch.clearHistory",
+          "when": "view == mdnSearch.view",
+          "group": "navigation@2"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "mdnSearch",
+          "title": "MDN Search",
+          "icon": "media/mdn-search.svg"
+        }
+      ]
+    },
+    "views": {
+      "mdnSearch": [
+        {
+          "id": "mdnSearch.view",
+          "name": "MDN 定义",
+          "icon": "media/mdn-search.svg",
+          "type": "webview"
+        }
+      ]
+    },
+    "configurationDefaults": {
+      "css.hover.documentation": false,
+      "css.hover.references": false,
+      "scss.hover.documentation": false,
+      "scss.hover.references": false,
+      "less.hover.documentation": false,
+      "less.hover.references": false
+    },
+    "configuration": {
+      "title": "MDN Search",
+      "properties": {
+        "mdnSearch.locale": {
+          "type": "string",
+          "enum": [
+            "zh-CN",
+            "en-US"
+          ],
+          "default": "zh-CN",
+          "description": "MDN 定义的首选语言。"
+        },
+        "mdnSearch.fallbackLocale": {
+          "type": "string",
+          "enum": [
+            "en-US",
+            "zh-CN"
+          ],
+          "default": "en-US",
+          "description": "首选语言没有结果时使用的回退语言。"
+        },
+        "mdnSearch.cacheHours": {
+          "type": "number",
+          "default": 24,
+          "minimum": 0,
+          "maximum": 720,
+          "description": "在线 MDN 查询结果的缓存小时数；设为 0 表示不缓存。"
+        },
+        "mdnSearch.historyLimit": {
+          "type": "number",
+          "default": 10,
+          "minimum": 0,
+          "maximum": 50,
+          "description": "侧边栏保留的最近查询数量。"
+        },
+        "mdnSearch.showCompatibility": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否显示浏览器兼容性摘要。"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "generate:data": "node scripts/generate-css-data.mjs",
+    "check": "tsc --noEmit",
+    "build": "npm run generate:data && node esbuild.mjs --production",
+    "watch": "node esbuild.mjs --watch",
+    "test": "tsx --test test/**/*.test.ts",
+    "package": "npm run check && npm test && npm run build && vsce package --no-dependencies --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@mdn/browser-compat-data": "^8.1.5",
+    "@types/node": "^24.0.0",
+    "@types/vscode": "^1.96.0",
+    "@vscode/vsce": "^4.0.0",
+    "esbuild": "^0.25.0",
+    "mdn-data": "^2.37.2",
+    "node-html-parser": "^9.0.4",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  },
+  "dependencies": {
+    "node-html-parser": "^9.0.4"
+  }
+}

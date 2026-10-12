@@ -1,0 +1,11 @@
+.vscode/**
+.gitignore
+src/**
+test/**
+scripts/**
+node_modules/**
+*.map
+tsconfig.json
+esbuild.mjs
+MDN_SEARCH_EXTENSION_PLAN.md
+work/**
